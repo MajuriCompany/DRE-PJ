@@ -130,7 +130,7 @@ export default function DashboardPage() {
         onSignOut={signOut}
       />
 
-      <main className="flex-1 px-4 sm:px-6 py-5 space-y-4 max-w-[1400px] w-full mx-auto">
+      <main className="flex-1 px-6 sm:px-8 lg:px-12 py-5 space-y-4 max-w-[1200px] w-full mx-auto">
 
         {/* KPI Cards — reagem ao activeTab */}
         <KPICards data={kpi} activeTab={activeTab} />
@@ -177,7 +177,7 @@ export default function DashboardPage() {
           <div className="space-y-4">
             {/* Pró-Labore (só na aba Geral) */}
             {activeTab === 'GERAL' && (
-              <div className="flex items-center gap-3">
+              <div className="flex justify-center">
                 <div className="bg-white border border-gray-100 rounded-xl shadow-sm px-5 py-3 flex items-center gap-3">
                   <span className="text-sm text-gray-500 font-medium">Pró-Labore Mensal</span>
                   {editingPL ? (
@@ -263,9 +263,11 @@ export default function DashboardPage() {
         )}
       </main>
 
-      <footer className="border-t border-gray-200 py-3 px-6 flex items-center justify-between bg-white">
+      <footer className="border-t border-gray-200 py-3 bg-white">
+        <div className="flex items-center justify-between px-8 max-w-[1200px] mx-auto">
         <p className="text-xs text-gray-400">DRE — Sistema de Controle Financeiro</p>
         <p className="text-xs text-gray-400">{user.email}</p>
+        </div>
       </footer>
     </div>
   )
