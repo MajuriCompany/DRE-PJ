@@ -1,0 +1,68 @@
+@import "tailwindcss";
+
+@theme inline {
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+
+  /* Background & Surfaces */
+  --color-background: #0F172A;
+  --color-card: #1E293B;
+  --color-card-border: #2D3E57;
+  --color-popover: #1E293B;
+
+  /* Foreground */
+  --color-foreground: #E2E8F0;
+  --color-muted-foreground: #94A3B8;
+
+  /* Semantic Colors */
+  --color-primary: #22C55E;
+  --color-primary-foreground: #0F172A;
+  --color-secondary: #334155;
+  --color-secondary-foreground: #E2E8F0;
+  --color-muted: #1E293B;
+  --color-accent: #1E293B;
+  --color-destructive: #EF4444;
+  --color-border: #2D3E57;
+  --color-input: #1E293B;
+  --color-ring: #22C55E;
+
+  /* Income (Entradas) */
+  --color-income: #22C55E;
+  --color-income-light: #16A34A;
+  --color-income-bg: rgba(34, 197, 94, 0.1);
+
+  /* Expense (Saídas) */
+  --color-expense: #EF4444;
+  --color-expense-light: #DC2626;
+  --color-expense-bg: rgba(239, 68, 68, 0.1);
+  --color-warning: #F97316;
+  --color-warning-bg: rgba(249, 115, 22, 0.1);
+
+  /* Infoprodutos */
+  --color-infoproduto: #A855F7;
+  --color-infoproduto-bg: rgba(168, 85, 247, 0.1);
+
+  /* Border Radius */
+  --radius: 0.75rem;
+  --radius-sm: 0.5rem;
+  --radius-lg: 1rem;
+}
+
+* {
+  border-color: #2D3E57;
+  box-sizing: border-box;
+}
+
+body {
+  background-color: #0F172A;
+  color: #E2E8F0;
+  font-family: var(--font-sans), 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Scrollbar customization */
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: #0F172A; }
+::-webkit-scrollbar-thumb { background: #334155; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #475569; }
