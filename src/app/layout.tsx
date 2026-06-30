@@ -5,8 +5,8 @@ import './globals.css'
 const geist = Geist({ subsets: ['latin'], variable: '--font-geist-sans' })
 
 export const metadata: Metadata = {
-  title: 'Crucial — Dashboard Financeiro',
-  description: 'Sistema de controle financeiro corporativo para agências e infoprodutores',
+  title: 'DRE — Dashboard Financeiro',
+  description: 'Sistema de controle financeiro corporativo',
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

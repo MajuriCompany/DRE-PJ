@@ -119,7 +119,7 @@ export function LoginPage({ onLogin, onSignUp, onResetPassword }: LoginPageProps
               <BarChart3 className="h-8 w-8 text-[#0F172A]" />
             </div>
             <div className="text-left">
-              <h1 className="text-3xl font-bold text-[#E2E8F0] tracking-tight">Crucial</h1>
+              <h1 className="text-3xl font-bold text-[#E2E8F0] tracking-tight">DRE</h1>
               <p className="text-sm text-[#475569]">Financial Dashboard</p>
             </div>
           </div>
@@ -158,7 +158,7 @@ export function LoginPage({ onLogin, onSignUp, onResetPassword }: LoginPageProps
             <div className="h-9 w-9 rounded-xl bg-[#22C55E] flex items-center justify-center">
               <BarChart3 className="h-5 w-5 text-[#0F172A]" />
             </div>
-            <span className="text-xl font-bold text-[#E2E8F0]">Crucial</span>
+            <span className="text-xl font-bold text-[#E2E8F0]">DRE</span>
           </div>
 
           {/* ─── MODO: LOGIN ─── */}

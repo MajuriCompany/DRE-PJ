@@ -170,7 +170,7 @@ export default function DashboardPage() {
       </main>
 
       <footer className="border-t border-[#2D3E57] py-3 px-6 flex items-center justify-between">
-        <p className="text-xs text-[#334155]">Crucial Financial — Sistema de Controle Corporativo</p>
+        <p className="text-xs text-[#334155]">DRE — Sistema de Controle Financeiro</p>
         <p className="text-xs text-[#334155]">{user.email}</p>
       </footer>
     </div>
