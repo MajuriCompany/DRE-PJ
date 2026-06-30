@@ -32,12 +32,14 @@ export function calcKPI(
 
   const faturamentoBruto = receitas.reduce((s, t) => s + (t.value_bruto || 0), 0)
   const faturamentoLiquido = receitas.reduce((s, t) => s + (t.value_liquido || 0), 0)
+  const impostosPagos = receitas.reduce((s, t) => s + (t.tax_value || 0), 0)
   const despesasTotal = despesas.reduce((s, t) => s + (t.value_total || 0), 0)
 
   return {
     saldoInicial,
     faturamentoBruto,
     faturamentoLiquido,
+    impostosPagos,
     despesasTotal,
     proLabore,
   }

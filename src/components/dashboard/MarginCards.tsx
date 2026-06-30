@@ -8,12 +8,12 @@ interface MarginCardsProps {
 }
 
 function MarginItem({ label, value }: { label: string; value: number }) {
-  const isPositive = value >= 0
-  const color = value >= 30 ? 'text-[#22C55E]' : value >= 10 ? 'text-[#F97316]' : 'text-[#EF4444]'
+  const color =
+    value >= 30 ? 'text-green-600' : value >= 10 ? 'text-orange-500' : value < 0 ? 'text-red-500' : 'text-orange-400'
   return (
     <div className="flex items-center justify-between py-1.5">
-      <span className="text-xs text-[#94A3B8]">{label}</span>
-      <span className={`text-sm font-bold tabular-nums ${isPositive ? color : 'text-[#EF4444]'}`}>
+      <span className="text-xs text-gray-500">{label}</span>
+      <span className={`text-sm font-bold tabular-nums ${color}`}>
         {formatPercent(value)}
       </span>
     </div>
@@ -21,43 +21,33 @@ function MarginItem({ label, value }: { label: string; value: number }) {
 }
 
 export function MarginCards({ margins, kpi }: MarginCardsProps) {
-  const lucroLiquido = kpi.faturamentoLiquido - kpi.despesasTotal
-
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-      <Card className="border-l-4 border-l-[#F97316]">
-        <CardContent className="p-5">
-          <p className="text-xs font-semibold uppercase tracking-wider text-[#94A3B8] mb-3">
-            Margens — Base: Faturamento Bruto
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+      <Card className="bg-white border border-gray-100 shadow-sm">
+        <CardContent className="p-4">
+          <p className="text-[10px] font-semibold uppercase tracking-widest text-blue-600 mb-3">
+            BASE: FATURAMENTO BRUTO
           </p>
-          <MarginItem label="Margem Bruta" value={margins.mgBruta} />
-          <div className="border-t border-[#2D3E57] my-1" />
+          <MarginItem label="MG Bruta" value={margins.mgBruta} />
+          <div className="border-t border-gray-100 my-1" />
           <MarginItem
-            label={`Margem Bruta (pós Pró-Labore ${formatCurrency(kpi.proLabore)})`}
+            label={`MG Bruta (pós PL${kpi.proLabore > 0 ? ` ${formatCurrency(kpi.proLabore)}` : ''})`}
             value={margins.mgBrutaPosProLabore}
           />
         </CardContent>
       </Card>
 
-      <Card className="border-l-4 border-l-[#F97316]">
-        <CardContent className="p-5">
-          <p className="text-xs font-semibold uppercase tracking-wider text-[#94A3B8] mb-3">
-            Margens — Base: Faturamento Líquido / Comissão
+      <Card className="bg-white border border-gray-100 shadow-sm">
+        <CardContent className="p-4">
+          <p className="text-[10px] font-semibold uppercase tracking-widest text-blue-600 mb-3">
+            BASE: COMISSÃO
           </p>
-          <MarginItem label="Margem Líquida" value={margins.mgLiquida} />
-          <div className="border-t border-[#2D3E57] my-1" />
+          <MarginItem label="MG Líquida" value={margins.mgLiquida} />
+          <div className="border-t border-gray-100 my-1" />
           <MarginItem
-            label={`Margem Líquida (pós Pró-Labore ${formatCurrency(kpi.proLabore)})`}
+            label={`MG Líquida (pós PL${kpi.proLabore > 0 ? ` ${formatCurrency(kpi.proLabore)}` : ''})`}
             value={margins.mgLiquidaPosProLabore}
           />
-          <div className="border-t border-[#2D3E57] mt-2 pt-2">
-            <div className="flex items-center justify-between">
-              <span className="text-xs text-[#475569]">Lucro Líquido</span>
-              <span className={`text-sm font-bold tabular-nums ${lucroLiquido >= 0 ? 'text-[#22C55E]' : 'text-[#EF4444]'}`}>
-                {formatCurrency(lucroLiquido)}
-              </span>
-            </div>
-          </div>
         </CardContent>
       </Card>
     </div>

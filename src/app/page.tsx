@@ -13,7 +13,6 @@ import { VertenteComparison } from '@/components/dashboard/VertenteComparison'
 import { VertenteConfigManager } from '@/components/dashboard/VertenteConfigManager'
 import { TransactionsTable } from '@/components/dashboard/TransactionsTable'
 import { LoginPage } from '@/components/dashboard/LoginPage'
-import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import {
   filterByMonth,
   calcKPI,
@@ -25,10 +24,14 @@ import {
   calcVertenteComparison,
 } from '@/lib/financial'
 import { exportTransactionsToCSV } from '@/lib/export'
-import { getCurrentMonthValue, parseMonthValue } from '@/lib/utils'
+import { getCurrentMonthValue, parseMonthValue, formatCurrency } from '@/lib/utils'
 import type { Vertente, TransactionFormData } from '@/types'
+import { Pencil, Check, X } from 'lucide-react'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
 
 type ActiveTab = 'GERAL' | Vertente
+type SubTab = 'overview' | 'transactions' | 'settings'
 
 const TAB_LABELS: Record<ActiveTab, string> = {
   GERAL: 'Geral',
@@ -36,10 +39,19 @@ const TAB_LABELS: Record<ActiveTab, string> = {
   INFOPRODUTO: 'Infoproduto',
 }
 
+const SUB_TABS: Array<{ key: SubTab; label: string }> = [
+  { key: 'overview', label: 'Visão Geral' },
+  { key: 'transactions', label: 'Transações' },
+  { key: 'settings', label: 'Configurações' },
+]
+
 export default function DashboardPage() {
   const { user, loading: authLoading, signOut, signInWithEmail, signUpWithEmail, resetPassword } = useAuth()
   const [selectedMonth, setSelectedMonth] = useState(getCurrentMonthValue())
   const [activeTab, setActiveTab] = useState<ActiveTab>('GERAL')
+  const [subTab, setSubTab] = useState<SubTab>('overview')
+  const [editingPL, setEditingPL] = useState(false)
+  const [plDraft, setPlDraft] = useState(0)
 
   const userId = user?.id ?? null
   const monthParsed = parseMonthValue(selectedMonth)
@@ -76,10 +88,20 @@ export default function DashboardPage() {
   const despesasCatData = useMemo(() => calcDespesasPorCategoria(filteredByTab, categories), [filteredByTab, categories])
   const comparisonData = useMemo(() => calcVertenteComparison(filteredByMonth, categories), [filteredByMonth, categories])
 
+  function handleTabChange(tab: ActiveTab) {
+    setActiveTab(tab)
+    setSubTab('overview')
+  }
+
+  async function handleSavePL() {
+    await upsertMonthlyData(plDraft, saldoInicial)
+    setEditingPL(false)
+  }
+
   if (authLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-[#475569] text-sm">Carregando...</div>
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="text-gray-400 text-sm">Carregando...</div>
       </div>
     )
   }
@@ -100,7 +122,7 @@ export default function DashboardPage() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col bg-gray-50">
       <Header
         selectedMonth={selectedMonth}
         onMonthChange={setSelectedMonth}
@@ -108,70 +130,142 @@ export default function DashboardPage() {
         onSignOut={signOut}
       />
 
-      <main className="flex-1 px-4 sm:px-6 py-6 space-y-6 max-w-[1400px] w-full mx-auto">
-        {/* Barra de Abas de Vertente */}
-        <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as ActiveTab)}>
-          <TabsList className="w-full sm:w-auto">
-            {(Object.keys(TAB_LABELS) as ActiveTab[]).map((tab) => (
-              <TabsTrigger key={tab} value={tab} className="flex-1 sm:flex-none">
-                {TAB_LABELS[tab]}
-              </TabsTrigger>
-            ))}
-          </TabsList>
-        </Tabs>
+      <main className="flex-1 px-4 sm:px-6 py-5 space-y-4 max-w-[1400px] w-full mx-auto">
 
-        {/* Grid de 4 KPI Cards */}
+        {/* KPI Cards — reagem ao activeTab */}
         <KPICards data={kpi} activeTab={activeTab} />
 
-        {/* Margens de Lucro */}
+        {/* Margens */}
         <MarginCards margins={margins} kpi={kpi} />
 
-        {/* Seção de Gráficos */}
-        {txLoading ? (
-          <div className="h-64 rounded-xl border border-[#2D3E57] bg-[#1E293B] flex items-center justify-center text-[#475569] text-sm">
-            Carregando dados...
+        {/* Seletor de Vertente */}
+        <div className="flex gap-1 bg-white border border-gray-100 rounded-xl p-1 shadow-sm w-fit">
+          {(Object.keys(TAB_LABELS) as ActiveTab[]).map((tab) => (
+            <button
+              key={tab}
+              onClick={() => handleTabChange(tab)}
+              className={`px-4 py-1.5 rounded-lg text-sm font-medium transition-colors ${
+                activeTab === tab
+                  ? 'bg-blue-600 text-white shadow-sm'
+                  : 'text-gray-500 hover:text-gray-800'
+              }`}
+            >
+              {TAB_LABELS[tab]}
+            </button>
+          ))}
+        </div>
+
+        {/* Sub-navegação */}
+        <div className="flex border-b border-gray-200">
+          {SUB_TABS.map((st) => (
+            <button
+              key={st.key}
+              onClick={() => setSubTab(st.key)}
+              className={`px-5 py-2.5 text-sm font-medium transition-colors border-b-2 -mb-px ${
+                subTab === st.key
+                  ? 'border-blue-600 text-blue-600'
+                  : 'border-transparent text-gray-500 hover:text-gray-700'
+              }`}
+            >
+              {st.label}
+            </button>
+          ))}
+        </div>
+
+        {/* Conteúdo da sub-aba */}
+        {subTab === 'overview' && (
+          <div className="space-y-4">
+            {/* Pró-Labore (só na aba Geral) */}
+            {activeTab === 'GERAL' && (
+              <div className="flex items-center gap-3">
+                <div className="bg-white border border-gray-100 rounded-xl shadow-sm px-5 py-3 flex items-center gap-3">
+                  <span className="text-sm text-gray-500 font-medium">Pró-Labore Mensal</span>
+                  {editingPL ? (
+                    <>
+                      <Input
+                        type="number"
+                        step="0.01"
+                        value={plDraft}
+                        onChange={(e) => setPlDraft(Number(e.target.value))}
+                        className="w-32 h-7 text-sm"
+                        autoFocus
+                      />
+                      <Button size="icon" variant="ghost" className="h-7 w-7 text-green-600" onClick={handleSavePL}>
+                        <Check className="h-3.5 w-3.5" />
+                      </Button>
+                      <Button size="icon" variant="ghost" className="h-7 w-7 text-gray-400" onClick={() => setEditingPL(false)}>
+                        <X className="h-3.5 w-3.5" />
+                      </Button>
+                    </>
+                  ) : (
+                    <>
+                      <span className="text-sm font-bold text-gray-800">{formatCurrency(proLabore)}</span>
+                      <Button
+                        size="icon"
+                        variant="ghost"
+                        className="h-7 w-7 text-gray-400 hover:text-blue-500"
+                        onClick={() => { setPlDraft(proLabore); setEditingPL(true) }}
+                      >
+                        <Pencil className="h-3.5 w-3.5" />
+                      </Button>
+                    </>
+                  )}
+                </div>
+              </div>
+            )}
+
+            {/* Comparativo Serviço vs Infoproduto (só no Geral) */}
+            {activeTab === 'GERAL' && (
+              <VertenteComparison rows={comparisonData} />
+            )}
+
+            {/* Gráficos */}
+            {txLoading ? (
+              <div className="h-48 rounded-xl border border-gray-100 bg-white flex items-center justify-center text-gray-400 text-sm">
+                Carregando dados...
+              </div>
+            ) : (
+              <ChartsSection
+                activeTab={activeTab}
+                lucroData={lucroData}
+                receitasTituloData={receitasTituloData}
+                receitasCategoriaData={receitasCatData}
+                despesasCategoriaData={despesasCatData}
+                transactions={filteredByMonth}
+                categories={categories}
+              />
+            )}
           </div>
-        ) : (
-          <ChartsSection
-            activeTab={activeTab}
-            lucroData={lucroData}
-            receitasTituloData={receitasTituloData}
-            receitasCategoriaData={receitasCatData}
-            despesasCategoriaData={despesasCatData}
-            transactions={filteredByMonth}
+        )}
+
+        {subTab === 'transactions' && (
+          <TransactionsTable
+            transactions={filteredByTab}
             categories={categories}
+            taxRates={taxRates}
+            onAdd={addTransaction}
+            onUpdate={(id, data) => updateTransaction(id, data as TransactionFormData)}
+            onDelete={deleteTransaction}
           />
         )}
 
-        {/* Comparativo por Vertente */}
-        <VertenteComparison rows={comparisonData} />
-
-        {/* Configurações */}
-        <VertenteConfigManager
-          taxRates={taxRates}
-          onSave={upsertConfig}
-          categories={categories}
-          onAddCategory={addCategory}
-          onDeleteCategory={deleteCategory}
-          proLabore={proLabore}
-          saldoInicial={saldoInicial}
-          onSaveMonthlyData={upsertMonthlyData}
-        />
-
-        {/* Tabela Master de Transações */}
-        <TransactionsTable
-          transactions={filteredByTab}
-          categories={categories}
-          taxRates={taxRates}
-          onAdd={addTransaction}
-          onUpdate={(id, data) => updateTransaction(id, data as TransactionFormData)}
-          onDelete={deleteTransaction}
-        />
+        {subTab === 'settings' && (
+          <VertenteConfigManager
+            taxRates={taxRates}
+            onSave={upsertConfig}
+            categories={categories}
+            onAddCategory={addCategory}
+            onDeleteCategory={deleteCategory}
+            proLabore={proLabore}
+            saldoInicial={saldoInicial}
+            onSaveMonthlyData={upsertMonthlyData}
+          />
+        )}
       </main>
 
-      <footer className="border-t border-[#2D3E57] py-3 px-6 flex items-center justify-between">
-        <p className="text-xs text-[#334155]">DRE — Sistema de Controle Financeiro</p>
-        <p className="text-xs text-[#334155]">{user.email}</p>
+      <footer className="border-t border-gray-200 py-3 px-6 flex items-center justify-between bg-white">
+        <p className="text-xs text-gray-400">DRE — Sistema de Controle Financeiro</p>
+        <p className="text-xs text-gray-400">{user.email}</p>
       </footer>
     </div>
   )

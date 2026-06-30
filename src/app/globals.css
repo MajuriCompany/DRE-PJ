@@ -5,42 +5,38 @@
   --font-mono: var(--font-geist-mono);
 
   /* Background & Surfaces */
-  --color-background: #0F172A;
-  --color-card: #1E293B;
-  --color-card-border: #2D3E57;
-  --color-popover: #1E293B;
+  --color-background: #F8FAFC;
+  --color-card: #FFFFFF;
+  --color-card-border: #E2E8F0;
+  --color-popover: #FFFFFF;
 
   /* Foreground */
-  --color-foreground: #E2E8F0;
-  --color-muted-foreground: #94A3B8;
+  --color-foreground: #1E293B;
+  --color-muted-foreground: #64748B;
 
   /* Semantic Colors */
-  --color-primary: #22C55E;
-  --color-primary-foreground: #0F172A;
-  --color-secondary: #334155;
-  --color-secondary-foreground: #E2E8F0;
-  --color-muted: #1E293B;
-  --color-accent: #1E293B;
+  --color-primary: #2563EB;
+  --color-primary-foreground: #FFFFFF;
+  --color-secondary: #F1F5F9;
+  --color-secondary-foreground: #1E293B;
+  --color-muted: #F1F5F9;
+  --color-accent: #F1F5F9;
   --color-destructive: #EF4444;
-  --color-border: #2D3E57;
-  --color-input: #1E293B;
-  --color-ring: #22C55E;
+  --color-border: #E2E8F0;
+  --color-input: #FFFFFF;
+  --color-ring: #2563EB;
 
-  /* Income (Entradas) */
-  --color-income: #22C55E;
-  --color-income-light: #16A34A;
-  --color-income-bg: rgba(34, 197, 94, 0.1);
+  /* Income */
+  --color-income: #16A34A;
+  --color-income-bg: rgba(22, 163, 74, 0.08);
 
-  /* Expense (Saídas) */
-  --color-expense: #EF4444;
-  --color-expense-light: #DC2626;
-  --color-expense-bg: rgba(239, 68, 68, 0.1);
-  --color-warning: #F97316;
-  --color-warning-bg: rgba(249, 115, 22, 0.1);
+  /* Expense */
+  --color-expense: #DC2626;
+  --color-expense-bg: rgba(220, 38, 38, 0.08);
+  --color-warning: #D97706;
 
   /* Infoprodutos */
-  --color-infoproduto: #A855F7;
-  --color-infoproduto-bg: rgba(168, 85, 247, 0.1);
+  --color-infoproduto: #7C3AED;
 
   /* Border Radius */
   --radius: 0.75rem;
@@ -49,20 +45,19 @@
 }
 
 * {
-  border-color: #2D3E57;
+  border-color: #E2E8F0;
   box-sizing: border-box;
 }
 
 body {
-  background-color: #0F172A;
-  color: #E2E8F0;
+  background-color: #F8FAFC;
+  color: #1E293B;
   font-family: var(--font-sans), 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Scrollbar customization */
 ::-webkit-scrollbar { width: 5px; height: 5px; }
-::-webkit-scrollbar-track { background: #0F172A; }
-::-webkit-scrollbar-thumb { background: #334155; border-radius: 3px; }
-::-webkit-scrollbar-thumb:hover { background: #475569; }
+::-webkit-scrollbar-track { background: #F1F5F9; }
+::-webkit-scrollbar-thumb { background: #CBD5E1; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #94A3B8; }

@@ -59,6 +59,7 @@ export interface KPIData {
   saldoInicial: number
   faturamentoBruto: number
   faturamentoLiquido: number
+  impostosPagos: number
   despesasTotal: number
   proLabore: number
 }
