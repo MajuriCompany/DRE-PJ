@@ -29,5 +29,17 @@ export function useAuth() {
     return { error: error?.message }
   }
 
-  return { user, loading, signOut, signInWithEmail }
+  const signUpWithEmail = async (email: string, password: string) => {
+    const { error } = await supabase.auth.signUp({ email, password })
+    return { error: error?.message }
+  }
+
+  const resetPassword = async (email: string) => {
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: `${window.location.origin}/reset-password`,
+    })
+    return { error: error?.message }
+  }
+
+  return { user, loading, signOut, signInWithEmail, signUpWithEmail, resetPassword }
 }

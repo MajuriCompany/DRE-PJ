@@ -37,7 +37,7 @@ const TAB_LABELS: Record<ActiveTab, string> = {
 }
 
 export default function DashboardPage() {
-  const { user, loading: authLoading, signOut, signInWithEmail } = useAuth()
+  const { user, loading: authLoading, signOut, signInWithEmail, signUpWithEmail, resetPassword } = useAuth()
   const [selectedMonth, setSelectedMonth] = useState(getCurrentMonthValue())
   const [activeTab, setActiveTab] = useState<ActiveTab>('GERAL')
 
@@ -85,7 +85,13 @@ export default function DashboardPage() {
   }
 
   if (!user) {
-    return <LoginPage onLogin={signInWithEmail} />
+    return (
+      <LoginPage
+        onLogin={signInWithEmail}
+        onSignUp={signUpWithEmail}
+        onResetPassword={resetPassword}
+      />
+    )
   }
 
   async function handleSaveTransaction(data: TransactionFormData, id?: string) {
