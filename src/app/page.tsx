@@ -174,20 +174,22 @@ export default function DashboardPage() {
         </div>
 
         {/* Sub-navegação */}
-        <div className="flex border-b border-gray-200">
-          {SUB_TABS.map((st) => (
-            <button
-              key={st.key}
-              onClick={() => setSubTab(st.key)}
-              className={`px-5 py-2.5 text-sm font-medium transition-colors border-b-2 -mb-px ${
-                subTab === st.key
-                  ? 'border-blue-600 text-blue-600'
-                  : 'border-transparent text-gray-500 hover:text-gray-700'
-              }`}
-            >
-              {st.label}
-            </button>
-          ))}
+        <div className="border-b border-gray-200">
+          <div className="flex justify-center">
+            {SUB_TABS.map((st) => (
+              <button
+                key={st.key}
+                onClick={() => setSubTab(st.key)}
+                className={`px-6 py-2.5 text-sm font-medium transition-colors border-b-2 -mb-px ${
+                  subTab === st.key
+                    ? 'border-blue-600 text-blue-600'
+                    : 'border-transparent text-gray-500 hover:text-gray-700'
+                }`}
+              >
+                {st.label}
+              </button>
+            ))}
+          </div>
         </div>
 
         {/* Conteúdo da sub-aba */}
@@ -196,37 +198,40 @@ export default function DashboardPage() {
             {/* Pró-Labore (só na aba Geral) */}
             {activeTab === 'GERAL' && (
               <div className="flex justify-center">
-                <div className="bg-white border border-gray-100 rounded-xl shadow-sm px-5 py-3 flex items-center gap-3">
-                  <span className="text-sm text-gray-500 font-medium">Pró-Labore Mensal</span>
-                  {editingPL ? (
-                    <>
+                <div className="bg-white border border-gray-100 rounded-xl shadow-sm px-5 py-3 flex items-center gap-4 min-w-[280px]">
+                  <div className="flex-1">
+                    <p className="text-xs text-gray-400 mb-0.5">Pró-Labore Mensal</p>
+                    {editingPL ? (
                       <Input
                         type="number"
                         step="0.01"
                         value={plDraft}
                         onChange={(e) => setPlDraft(Number(e.target.value))}
-                        className="w-32 h-7 text-sm"
+                        className="h-7 text-sm font-bold"
                         autoFocus
                       />
-                      <Button size="icon" variant="ghost" className="h-7 w-7 text-green-600" onClick={handleSavePL}>
+                    ) : (
+                      <p className="text-base font-bold text-gray-800">{formatCurrency(proLabore)}</p>
+                    )}
+                  </div>
+                  {editingPL ? (
+                    <div className="flex gap-1">
+                      <Button size="icon" variant="ghost" className="h-7 w-7 text-green-600 hover:text-green-700" onClick={handleSavePL}>
                         <Check className="h-3.5 w-3.5" />
                       </Button>
                       <Button size="icon" variant="ghost" className="h-7 w-7 text-gray-400" onClick={() => setEditingPL(false)}>
                         <X className="h-3.5 w-3.5" />
                       </Button>
-                    </>
+                    </div>
                   ) : (
-                    <>
-                      <span className="text-sm font-bold text-gray-800">{formatCurrency(proLabore)}</span>
-                      <Button
-                        size="icon"
-                        variant="ghost"
-                        className="h-7 w-7 text-gray-400 hover:text-blue-500"
-                        onClick={() => { setPlDraft(proLabore); setEditingPL(true) }}
-                      >
-                        <Pencil className="h-3.5 w-3.5" />
-                      </Button>
-                    </>
+                    <Button
+                      size="icon"
+                      variant="ghost"
+                      className="h-7 w-7 text-gray-400 hover:text-blue-500"
+                      onClick={() => { setPlDraft(proLabore); setEditingPL(true) }}
+                    >
+                      <Pencil className="h-3.5 w-3.5" />
+                    </Button>
                   )}
                 </div>
               </div>
