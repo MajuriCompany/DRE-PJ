@@ -13,7 +13,7 @@ export function MonthSelector({ value, onChange }: MonthSelectorProps) {
 
   return (
     <div className="flex items-center gap-2">
-      <CalendarDays className="h-4 w-4 text-[#94A3B8] shrink-0" />
+      <CalendarDays className="h-4 w-4 text-gray-400 shrink-0" />
       <Select value={value} onValueChange={onChange}>
         <SelectTrigger className="w-[210px]">
           <SelectValue placeholder="Selecionar período" />

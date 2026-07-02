@@ -9,7 +9,7 @@ export function Label({
   return (
     <LabelPrimitive.Root
       className={cn(
-        'text-xs font-medium text-[#94A3B8] leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70',
+        'text-xs font-medium text-gray-600 leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70',
         className
       )}
       {...props}

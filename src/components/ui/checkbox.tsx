@@ -10,10 +10,10 @@ export function Checkbox({
   return (
     <CheckboxPrimitive.Root
       className={cn(
-        'peer h-4 w-4 shrink-0 rounded border border-[#2D3E57] bg-[#0F172A] shadow',
-        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#22C55E]',
+        'peer h-4 w-4 shrink-0 rounded border border-gray-300 bg-white shadow',
+        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500',
         'disabled:cursor-not-allowed disabled:opacity-50',
-        'data-[state=checked]:bg-[#22C55E] data-[state=checked]:border-[#22C55E] data-[state=checked]:text-[#0F172A]',
+        'data-[state=checked]:bg-blue-600 data-[state=checked]:border-blue-600 data-[state=checked]:text-white',
         className
       )}
       {...props}

@@ -235,16 +235,16 @@ export function EditTransactionDialog({
 
           <div className="grid grid-cols-2 gap-3">
             <div className="space-y-1.5">
-              <Label className="text-[#22C55E]">Fat. Líquido / Comissão (R$) *</Label>
+              <Label className="text-green-600">Fat. Líquido / Comissão (R$) *</Label>
               <Input
                 type="number"
                 step="0.01"
                 min="0"
                 placeholder="Calculado automaticamente"
-                className="border-[#22C55E]/40 focus:ring-[#22C55E]"
+                className="border-green-300 focus:ring-green-500"
                 {...register('value_liquido', { valueAsNumber: true })}
               />
-              <p className="text-[10px] text-[#475569]">Editável — sobrescreva se necessário</p>
+              <p className="text-[10px] text-gray-400">Editável — sobrescreva se necessário</p>
             </div>
             <div className="space-y-1.5">
               <Label>Valor Total (R$)</Label>
@@ -264,7 +264,7 @@ export function EditTransactionDialog({
           </div>
 
           {error && (
-            <p className="text-xs text-[#EF4444] bg-[#EF4444]/10 border border-[#EF4444]/30 rounded-lg px-3 py-2">
+            <p className="text-xs text-red-600 bg-red-50 border border-red-200 rounded-lg px-3 py-2">
               {error}
             </p>
           )}

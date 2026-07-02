@@ -11,7 +11,7 @@ export function AccordionItem({
 }: React.ComponentPropsWithoutRef<typeof AccordionPrimitive.Item>) {
   return (
     <AccordionPrimitive.Item
-      className={cn('border-b border-[#2D3E57]', className)}
+      className={cn('border-b border-gray-100', className)}
       {...props}
     />
   )
@@ -26,14 +26,14 @@ export function AccordionTrigger({
     <AccordionPrimitive.Header className="flex">
       <AccordionPrimitive.Trigger
         className={cn(
-          'flex flex-1 items-center justify-between py-4 text-sm font-medium text-[#E2E8F0] transition-all hover:text-[#22C55E]',
+          'flex flex-1 items-center justify-between py-4 text-sm font-medium text-gray-700 transition-all hover:text-blue-600',
           '[&[data-state=open]>svg]:rotate-180',
           className
         )}
         {...props}
       >
         {children}
-        <ChevronDown className="h-4 w-4 shrink-0 text-[#94A3B8] transition-transform duration-200" />
+        <ChevronDown className="h-4 w-4 shrink-0 text-gray-400 transition-transform duration-200" />
       </AccordionPrimitive.Trigger>
     </AccordionPrimitive.Header>
   )

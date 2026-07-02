@@ -8,10 +8,10 @@ import { Label } from '@/components/ui/label'
 import type { Vertente } from '@/types'
 import { Settings2, Plus, Trash2 } from 'lucide-react'
 
-const VERTENTES: Array<{ key: Vertente; label: string; color: string }> = [
-  { key: 'GERAL', label: 'Geral', color: '#94A3B8' },
-  { key: 'SERVICO', label: 'Serviço', color: '#22C55E' },
-  { key: 'INFOPRODUTO', label: 'Infoproduto', color: '#A855F7' },
+const VERTENTES: Array<{ key: Vertente; label: string }> = [
+  { key: 'GERAL', label: 'Geral' },
+  { key: 'SERVICO', label: 'Serviço' },
+  { key: 'INFOPRODUTO', label: 'Infoproduto' },
 ]
 
 interface VertenteConfigManagerProps {
@@ -65,7 +65,7 @@ export function VertenteConfigManager({
         <Accordion type="single" collapsible>
           <AccordionItem value="config" className="border-0">
             <AccordionTrigger className="px-5 py-4 hover:no-underline">
-              <div className="flex items-center gap-2 text-[#94A3B8]">
+              <div className="flex items-center gap-2 text-gray-600">
                 <Settings2 className="h-4 w-4" />
                 <span className="text-sm font-medium">Configurações do Período</span>
               </div>
@@ -74,7 +74,7 @@ export function VertenteConfigManager({
               <div className="px-5 space-y-6 pb-2">
                 {/* Dados mensais */}
                 <div>
-                  <h4 className="text-xs font-semibold text-[#94A3B8] uppercase tracking-wider mb-3">
+                  <h4 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">
                     Dados do Mês
                   </h4>
                   <div className="grid grid-cols-2 gap-3">
@@ -112,13 +112,13 @@ export function VertenteConfigManager({
 
                 {/* Alíquotas por vertente */}
                 <div>
-                  <h4 className="text-xs font-semibold text-[#94A3B8] uppercase tracking-wider mb-3">
+                  <h4 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">
                     Alíquota de Imposto por Vertente (%)
                   </h4>
                   <div className="grid grid-cols-3 gap-3">
                     {VERTENTES.map((v) => (
                       <div key={v.key} className="space-y-1.5">
-                        <Label style={{ color: v.color }}>{v.label}</Label>
+                        <Label>{v.label}</Label>
                         <Input
                           type="number"
                           step="0.01"
@@ -146,7 +146,7 @@ export function VertenteConfigManager({
 
                 {/* Gerenciar categorias */}
                 <div>
-                  <h4 className="text-xs font-semibold text-[#94A3B8] uppercase tracking-wider mb-3">
+                  <h4 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">
                     Gerenciar Categorias
                   </h4>
                   <div className="flex gap-2 mb-3">
@@ -160,7 +160,7 @@ export function VertenteConfigManager({
                     <select
                       value={newCatType}
                       onChange={(e) => setNewCatType(e.target.value as 'RECEITA' | 'DESPESA')}
-                      className="h-9 rounded-lg border border-[#2D3E57] bg-[#0F172A] px-2 text-sm text-[#E2E8F0] focus:outline-none focus:ring-2 focus:ring-[#22C55E]"
+                      className="h-9 rounded-lg border border-gray-200 bg-white px-2 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
                     >
                       <option value="RECEITA">Receita</option>
                       <option value="DESPESA">Despesa</option>
@@ -173,19 +173,19 @@ export function VertenteConfigManager({
                     {categories.map((cat) => (
                       <div
                         key={cat.id}
-                        className="flex items-center justify-between rounded-lg px-3 py-1.5 hover:bg-[#334155]/30"
+                        className="flex items-center justify-between rounded-lg px-3 py-1.5 hover:bg-gray-50"
                       >
                         <div className="flex items-center gap-2">
                           <span
-                            className={`h-1.5 w-1.5 rounded-full ${cat.type === 'RECEITA' ? 'bg-[#22C55E]' : 'bg-[#EF4444]'}`}
+                            className={`h-1.5 w-1.5 rounded-full ${cat.type === 'RECEITA' ? 'bg-green-500' : 'bg-red-500'}`}
                           />
-                          <span className="text-xs text-[#E2E8F0]">{cat.name}</span>
-                          <span className="text-[10px] text-[#475569]">{cat.type}</span>
+                          <span className="text-xs text-gray-800">{cat.name}</span>
+                          <span className="text-[10px] text-gray-400">{cat.type}</span>
                         </div>
                         <Button
                           variant="ghost"
                           size="icon"
-                          className="h-6 w-6 text-[#EF4444]/60 hover:text-[#EF4444]"
+                          className="h-6 w-6 text-red-400 hover:text-red-600"
                           onClick={() => onDeleteCategory(cat.id)}
                         >
                           <Trash2 className="h-3 w-3" />
@@ -193,7 +193,7 @@ export function VertenteConfigManager({
                       </div>
                     ))}
                     {categories.length === 0 && (
-                      <p className="text-xs text-[#475569] px-3 py-2">Nenhuma categoria cadastrada</p>
+                      <p className="text-xs text-gray-400 px-3 py-2">Nenhuma categoria cadastrada</p>
                     )}
                   </div>
                 </div>

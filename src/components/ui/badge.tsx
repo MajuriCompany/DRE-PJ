@@ -6,13 +6,13 @@ const badgeVariants = cva(
   {
     variants: {
       variant: {
-        default: 'border-[#2D3E57] bg-[#1E293B] text-[#E2E8F0]',
-        income: 'border-[#22C55E]/30 bg-[#22C55E]/10 text-[#22C55E]',
-        expense: 'border-[#EF4444]/30 bg-[#EF4444]/10 text-[#EF4444]',
-        warning: 'border-[#F97316]/30 bg-[#F97316]/10 text-[#F97316]',
-        infoproduto: 'border-[#A855F7]/30 bg-[#A855F7]/10 text-[#A855F7]',
-        outline: 'border-[#2D3E57] bg-transparent text-[#94A3B8]',
-        total: 'border-[#2D3E57] bg-[#0F172A] text-[#E2E8F0] font-mono',
+        default: 'border-gray-200 bg-gray-100 text-gray-700',
+        income: 'border-green-200 bg-green-50 text-green-700',
+        expense: 'border-red-200 bg-red-50 text-red-600',
+        warning: 'border-orange-200 bg-orange-50 text-orange-600',
+        infoproduto: 'border-purple-200 bg-purple-50 text-purple-700',
+        outline: 'border-gray-200 bg-transparent text-gray-500',
+        total: 'border-gray-200 bg-gray-50 text-gray-700 font-mono',
       },
     },
     defaultVariants: { variant: 'default' },

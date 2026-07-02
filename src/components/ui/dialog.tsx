@@ -15,7 +15,7 @@ export function DialogOverlay({
   return (
     <DialogPrimitive.Overlay
       className={cn(
-        'fixed inset-0 z-50 bg-black/70 backdrop-blur-sm',
+        'fixed inset-0 z-50 bg-black/40 backdrop-blur-sm',
         'data-[state=open]:animate-in data-[state=closed]:animate-out',
         'data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0',
         className
@@ -37,7 +37,7 @@ export function DialogContent({
         className={cn(
           'fixed left-[50%] top-[50%] z-50 translate-x-[-50%] translate-y-[-50%]',
           'w-full max-w-lg max-h-[90vh] overflow-y-auto',
-          'rounded-xl border border-[#2D3E57] bg-[#1E293B] p-6 shadow-2xl',
+          'rounded-xl border border-gray-100 bg-white p-6 shadow-xl',
           'data-[state=open]:animate-in data-[state=closed]:animate-out',
           'data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0',
           'data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95',
@@ -48,7 +48,7 @@ export function DialogContent({
         {...props}
       >
         {children}
-        <DialogPrimitive.Close className="absolute right-4 top-4 rounded-lg p-1.5 text-[#475569] opacity-70 hover:opacity-100 hover:bg-[#334155] transition-all">
+        <DialogPrimitive.Close className="absolute right-4 top-4 rounded-lg p-1.5 text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition-all">
           <X className="h-4 w-4" />
           <span className="sr-only">Fechar</span>
         </DialogPrimitive.Close>
@@ -67,7 +67,7 @@ export function DialogTitle({
 }: React.ComponentPropsWithoutRef<typeof DialogPrimitive.Title>) {
   return (
     <DialogPrimitive.Title
-      className={cn('text-lg font-semibold leading-none text-[#E2E8F0]', className)}
+      className={cn('text-lg font-semibold leading-none text-gray-800', className)}
       {...props}
     />
   )
@@ -79,7 +79,7 @@ export function DialogDescription({
 }: React.ComponentPropsWithoutRef<typeof DialogPrimitive.Description>) {
   return (
     <DialogPrimitive.Description
-      className={cn('text-sm text-[#94A3B8]', className)}
+      className={cn('text-sm text-gray-500', className)}
       {...props}
     />
   )
@@ -88,7 +88,7 @@ export function DialogDescription({
 export function DialogFooter({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
   return (
     <div
-      className={cn('flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2 mt-5 pt-4 border-t border-[#2D3E57]', className)}
+      className={cn('flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2 mt-5 pt-4 border-t border-gray-100', className)}
       {...props}
     />
   )
