@@ -57,6 +57,7 @@ export function EditTransactionDialog({
   const watchVertente = watch('vertente')
   const watchBruto = watch('value_bruto')
   const watchTaxRate = watch('tax_rate')
+  const watchTaxValue = watch('tax_value')
 
   useEffect(() => {
     if (transaction) {
@@ -95,15 +96,20 @@ export function EditTransactionDialog({
     setValue('tax_rate', rate)
   }, [watchVertente, taxRates, setValue])
 
+  // Calcula imposto automaticamente quando bruto ou alíquota mudam
   useEffect(() => {
     const bruto = Number(watchBruto) || 0
     const rate = Number(watchTaxRate) || 0
-    const taxValue = (bruto * rate) / 100
-    const liquido = bruto - taxValue
-    setValue('tax_value', parseFloat(taxValue.toFixed(2)))
-    setValue('value_liquido', parseFloat(liquido.toFixed(2)))
-    setValue('value_total', watchType === 'RECEITA' ? parseFloat(bruto.toFixed(2)) : parseFloat(bruto.toFixed(2)))
-  }, [watchBruto, watchTaxRate, watchType, setValue])
+    setValue('tax_value', parseFloat(((bruto * rate) / 100).toFixed(2)))
+    setValue('value_total', parseFloat(bruto.toFixed(2)))
+  }, [watchBruto, watchTaxRate, setValue])
+
+  // Atualiza líquido sempre que bruto ou imposto mudam (imposto pode ser editado manualmente)
+  useEffect(() => {
+    const bruto = Number(watchBruto) || 0
+    const tax = Number(watchTaxValue) || 0
+    setValue('value_liquido', parseFloat((bruto - tax).toFixed(2)))
+  }, [watchBruto, watchTaxValue, setValue])
 
   const filteredCategories = categories.filter((c) => c.type === watchType)
 
@@ -226,8 +232,6 @@ export function EditTransactionDialog({
               <Input
                 type="number"
                 step="0.01"
-                readOnly
-                className="opacity-60"
                 {...register('tax_value', { valueAsNumber: true })}
               />
             </div>
