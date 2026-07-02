@@ -84,45 +84,47 @@ export function calcMargins(kpi: KPIData): MarginData {
 }
 
 export function calcLucroDistribution(transactions: Transaction[]): ChartDataItem[] {
-  const receitas = transactions.filter((t) => t.type === 'RECEITA')
-  const despesasTotal = transactions
+  // INFOPRODUTO: mesmo cálculo do tab — receitas líquidas minus despesas da vertente
+  const infoTxs = transactions.filter((t) => t.vertente === 'INFOPRODUTO')
+  const infoLucro =
+    infoTxs.filter((t) => t.type === 'RECEITA').reduce((s, t) => s + (t.value_liquido || 0), 0) -
+    infoTxs.filter((t) => t.type === 'DESPESA').reduce((s, t) => s + (t.value_total || 0), 0)
+
+  // SERVICO: lucro total da vertente, distribuído proporcionalmente por cliente
+  const servicoTxs = transactions.filter((t) => t.vertente === 'SERVICO')
+  const servicoReceitas = servicoTxs.filter((t) => t.type === 'RECEITA')
+  const servicoDespTotal = servicoTxs
     .filter((t) => t.type === 'DESPESA')
     .reduce((s, t) => s + (t.value_total || 0), 0)
+  const servicoLiqTotal = servicoReceitas.reduce((s, t) => s + (t.value_liquido || 0), 0)
+  const servicoLucro = servicoLiqTotal - servicoDespTotal
 
-  const infoTransactions = receitas.filter((t) => t.vertente === 'INFOPRODUTO')
-  const serviceTransactions = receitas.filter((t) => t.vertente === 'SERVICO')
-
-  const infoTotalBruto = infoTransactions.reduce((s, t) => s + (t.value_bruto || 0), 0)
-  const serviceTotalBruto = serviceTransactions.reduce((s, t) => s + (t.value_bruto || 0), 0)
-  const totalBruto = infoTotalBruto + serviceTotalBruto
-
-  if (totalBruto === 0) return []
-
-  const infoLucro = (infoTotalBruto / totalBruto) * (totalBruto - despesasTotal)
   const items: ChartDataItem[] = []
 
   if (infoLucro > 0) {
-    items.push({ name: 'Infoprodutos (Total)', value: infoLucro, color: CHART_COLORS.infoproduto })
+    items.push({ name: 'Infoprodutos', value: infoLucro, color: CHART_COLORS.infoproduto })
   }
 
-  const clientMap = new Map<string, number>()
-  serviceTransactions.forEach((t) => {
-    const client = t.description || 'Outros'
-    clientMap.set(client, (clientMap.get(client) || 0) + (t.value_bruto || 0))
-  })
+  if (servicoLucro > 0 && servicoLiqTotal > 0) {
+    const clientMap = new Map<string, number>()
+    servicoReceitas.forEach((t) => {
+      const client = t.description || 'Outros'
+      clientMap.set(client, (clientMap.get(client) || 0) + (t.value_liquido || 0))
+    })
 
-  let colorIdx = 0
-  clientMap.forEach((bruto, client) => {
-    const lucro = (bruto / totalBruto) * (totalBruto - despesasTotal)
-    if (lucro > 0) {
-      items.push({
-        name: client,
-        value: lucro,
-        color: CHART_COLORS.service[colorIdx % CHART_COLORS.service.length],
-      })
-      colorIdx++
-    }
-  })
+    let colorIdx = 0
+    clientMap.forEach((liq, client) => {
+      const clientLucro = (liq / servicoLiqTotal) * servicoLucro
+      if (clientLucro > 0) {
+        items.push({
+          name: client,
+          value: clientLucro,
+          color: CHART_COLORS.service[colorIdx % CHART_COLORS.service.length],
+        })
+        colorIdx++
+      }
+    })
+  }
 
   return items
 }
