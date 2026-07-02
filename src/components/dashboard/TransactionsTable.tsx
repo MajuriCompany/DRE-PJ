@@ -47,14 +47,8 @@ export function TransactionsTable({
   const totalPages = Math.ceil(filtered.length / PAGE_SIZE)
   const paginated = filtered.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE)
 
-  function openAdd() {
-    setEditing(null)
-    setDialogOpen(true)
-  }
-  function openEdit(t: Transaction) {
-    setEditing(t)
-    setDialogOpen(true)
-  }
+  function openAdd() { setEditing(null); setDialogOpen(true) }
+  function openEdit(t: Transaction) { setEditing(t); setDialogOpen(true) }
 
   async function handleDelete(id: string) {
     if (!confirm('Tem certeza que deseja excluir esta transação?')) return
@@ -70,11 +64,11 @@ export function TransactionsTable({
 
   return (
     <>
-      <Card>
-        <CardHeader>
+      <Card className="bg-white border border-gray-100 shadow-sm">
+        <CardHeader className="pb-3">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-            <CardTitle className="text-sm">Transações ({filtered.length})</CardTitle>
-            <Button size="sm" onClick={openAdd} className="gap-1.5 w-full sm:w-auto">
+            <CardTitle className="text-sm text-gray-700">Transações ({filtered.length})</CardTitle>
+            <Button size="sm" onClick={openAdd} className="gap-1.5 w-full sm:w-auto bg-green-600 hover:bg-green-700 text-white">
               <Plus className="h-3.5 w-3.5" />
               Nova Transação
             </Button>
@@ -82,16 +76,16 @@ export function TransactionsTable({
 
           <div className="flex flex-col sm:flex-row gap-2 mt-2">
             <div className="relative flex-1">
-              <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-[#475569]" />
+              <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-gray-400" />
               <Input
                 placeholder="Buscar por descrição ou categoria..."
                 value={search}
                 onChange={(e) => { setSearch(e.target.value); setPage(1) }}
-                className="pl-8"
+                className="pl-8 bg-white border-gray-200 text-gray-700 placeholder:text-gray-400"
               />
             </div>
             <Select value={filterType} onValueChange={(v) => { setFilterType(v); setPage(1) }}>
-              <SelectTrigger className="w-full sm:w-[130px]">
+              <SelectTrigger className="w-full sm:w-[130px] bg-white border-gray-200 text-gray-700">
                 <SelectValue placeholder="Tipo" />
               </SelectTrigger>
               <SelectContent>
@@ -101,7 +95,7 @@ export function TransactionsTable({
               </SelectContent>
             </Select>
             <Select value={filterCategory} onValueChange={(v) => { setFilterCategory(v); setPage(1) }}>
-              <SelectTrigger className="w-full sm:w-[160px]">
+              <SelectTrigger className="w-full sm:w-[160px] bg-white border-gray-200 text-gray-700">
                 <SelectValue placeholder="Categoria" />
               </SelectTrigger>
               <SelectContent>
@@ -118,11 +112,11 @@ export function TransactionsTable({
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b border-[#2D3E57]">
+                <tr className="border-b border-gray-100 bg-gray-50">
                   {['Data', 'Descrição', 'Categoria', 'Tipo', 'Vertente', 'Fat. Bruto', 'Líquido', 'Total', ''].map((h) => (
                     <th
                       key={h}
-                      className="px-4 py-2.5 text-left text-xs font-semibold text-[#94A3B8] uppercase tracking-wider whitespace-nowrap"
+                      className="px-4 py-2.5 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider whitespace-nowrap"
                     >
                       {h}
                     </th>
@@ -132,7 +126,7 @@ export function TransactionsTable({
               <tbody>
                 {paginated.length === 0 ? (
                   <tr>
-                    <td colSpan={9} className="px-4 py-12 text-center text-[#475569] text-sm">
+                    <td colSpan={9} className="px-4 py-12 text-center text-gray-400 text-sm">
                       Nenhuma transação encontrada
                     </td>
                   </tr>
@@ -140,16 +134,16 @@ export function TransactionsTable({
                   paginated.map((t) => (
                     <tr
                       key={t.id}
-                      className="border-b border-[#2D3E57]/50 hover:bg-[#1E293B]/50 transition-colors"
+                      className="border-b border-gray-50 hover:bg-gray-50 transition-colors"
                     >
-                      <td className="px-4 py-3 text-xs text-[#94A3B8] whitespace-nowrap font-mono">
+                      <td className="px-4 py-3 text-xs text-gray-400 whitespace-nowrap font-mono">
                         {formatDate(t.date)}
                       </td>
                       <td className="px-4 py-3 max-w-[200px]">
-                        <p className="text-[#E2E8F0] truncate text-xs">{t.description}</p>
-                        {t.notes && <p className="text-[#475569] text-[10px] truncate">{t.notes}</p>}
+                        <p className="text-gray-800 truncate text-xs font-medium">{t.description}</p>
+                        {t.notes && <p className="text-gray-400 text-[10px] truncate">{t.notes}</p>}
                       </td>
-                      <td className="px-4 py-3 text-xs text-[#94A3B8] whitespace-nowrap">
+                      <td className="px-4 py-3 text-xs text-gray-500 whitespace-nowrap">
                         {t.categories?.name || '—'}
                       </td>
                       <td className="px-4 py-3 whitespace-nowrap">
@@ -162,33 +156,27 @@ export function TransactionsTable({
                           {t.vertente}
                         </Badge>
                       </td>
-                      <td className="px-4 py-3 text-xs font-mono text-[#E2E8F0] whitespace-nowrap">
+                      <td className="px-4 py-3 text-xs font-mono text-gray-700 whitespace-nowrap">
                         {formatCurrency(t.value_bruto)}
                       </td>
                       <td className="px-4 py-3 text-xs font-mono whitespace-nowrap">
-                        <span className={t.type === 'RECEITA' ? 'text-[#22C55E]' : 'text-[#94A3B8]'}>
+                        <span className={t.type === 'RECEITA' ? 'text-green-600' : 'text-gray-400'}>
                           {formatCurrency(t.value_liquido)}
                         </span>
                       </td>
                       <td className="px-4 py-3 text-xs font-mono whitespace-nowrap">
-                        <span className={t.type === 'DESPESA' ? 'text-[#EF4444]' : 'text-[#94A3B8]'}>
+                        <span className={t.type === 'DESPESA' ? 'text-red-500 font-semibold' : 'text-gray-500'}>
                           {formatCurrency(t.value_total)}
                         </span>
                       </td>
                       <td className="px-4 py-3 whitespace-nowrap">
                         <div className="flex gap-1">
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            className="h-7 w-7"
-                            onClick={() => openEdit(t)}
-                          >
+                          <Button variant="ghost" size="icon" className="h-7 w-7 text-gray-400 hover:text-blue-600" onClick={() => openEdit(t)}>
                             <Pencil className="h-3.5 w-3.5" />
                           </Button>
                           <Button
-                            variant="ghost"
-                            size="icon"
-                            className="h-7 w-7 text-[#EF4444]/70 hover:text-[#EF4444]"
+                            variant="ghost" size="icon"
+                            className="h-7 w-7 text-gray-400 hover:text-red-500"
                             onClick={() => handleDelete(t.id)}
                             disabled={deletingId === t.id}
                           >
@@ -204,27 +192,17 @@ export function TransactionsTable({
           </div>
 
           {totalPages > 1 && (
-            <div className="flex items-center justify-between px-4 py-3 border-t border-[#2D3E57]">
-              <p className="text-xs text-[#475569]">
+            <div className="flex items-center justify-between px-4 py-3 border-t border-gray-100">
+              <p className="text-xs text-gray-400">
                 Página {page} de {totalPages} · {filtered.length} transações
               </p>
               <div className="flex gap-1">
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="h-7 w-7"
-                  onClick={() => setPage((p) => Math.max(1, p - 1))}
-                  disabled={page === 1}
-                >
+                <Button variant="ghost" size="icon" className="h-7 w-7 text-gray-500"
+                  onClick={() => setPage((p) => Math.max(1, p - 1))} disabled={page === 1}>
                   <ChevronLeft className="h-4 w-4" />
                 </Button>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="h-7 w-7"
-                  onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-                  disabled={page === totalPages}
-                >
+                <Button variant="ghost" size="icon" className="h-7 w-7 text-gray-500"
+                  onClick={() => setPage((p) => Math.min(totalPages, p + 1))} disabled={page === totalPages}>
                   <ChevronRight className="h-4 w-4" />
                 </Button>
               </div>

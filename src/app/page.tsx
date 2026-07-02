@@ -146,7 +146,8 @@ export default function DashboardPage() {
         <MarginCards margins={margins} kpi={kpi} />
 
         {/* Seletor de Vertente */}
-        <div className="flex gap-1 bg-white border border-gray-100 rounded-xl p-1 shadow-sm w-fit">
+        <div className="flex justify-center">
+        <div className="flex gap-1 bg-white border border-gray-100 rounded-xl p-1 shadow-sm">
           {(Object.keys(TAB_LABELS) as ActiveTab[]).map((tab) => (
             <button
               key={tab}
@@ -160,6 +161,7 @@ export default function DashboardPage() {
               {TAB_LABELS[tab]}
             </button>
           ))}
+        </div>
         </div>
 
         {/* Sub-navegação */}

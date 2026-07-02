@@ -7,16 +7,16 @@ interface TotalBadgeProps {
 }
 
 const colorMap = {
-  income: 'border-[#22C55E]/30 bg-[#22C55E]/10 text-[#22C55E]',
-  expense: 'border-[#EF4444]/30 bg-[#EF4444]/10 text-[#EF4444]',
-  infoproduto: 'border-[#A855F7]/30 bg-[#A855F7]/10 text-[#A855F7]',
-  default: 'border-[#2D3E57] bg-[#0F172A] text-[#E2E8F0]',
+  income: 'border-green-200 bg-green-50 text-green-700',
+  expense: 'border-red-200 bg-red-50 text-red-600',
+  infoproduto: 'border-purple-200 bg-purple-50 text-purple-700',
+  default: 'border-gray-200 bg-gray-50 text-gray-700',
 }
 
 export function TotalBadge({ total, label = 'Total', color = 'default' }: TotalBadgeProps) {
   return (
     <div className={`inline-flex items-center gap-2 rounded-full border px-3 py-1 text-xs font-medium ${colorMap[color]}`}>
-      <span className="text-[#94A3B8]">{label}:</span>
+      <span className="text-gray-500">{label}:</span>
       <span className="font-mono font-semibold">{formatCurrency(total)}</span>
     </div>
   )

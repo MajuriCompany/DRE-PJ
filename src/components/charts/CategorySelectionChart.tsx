@@ -71,7 +71,7 @@ export function CategorySelectionChart({ transactions, categories }: CategorySel
                 checked={selected.size === despesaCategories.length}
                 onCheckedChange={toggleAll}
               />
-              <Label htmlFor="toggle-all" className="cursor-pointer text-[#E2E8F0] text-xs font-semibold">
+              <Label htmlFor="toggle-all" className="cursor-pointer text-gray-700 text-xs font-semibold">
                 Selecionar Todas
               </Label>
             </div>
@@ -92,12 +92,12 @@ export function CategorySelectionChart({ transactions, categories }: CategorySel
                         {cat.name}
                       </Label>
                     </div>
-                    <span className="text-xs font-mono text-[#94A3B8]">{formatCurrency(total)}</span>
+                    <span className="text-xs font-mono text-gray-500">{formatCurrency(total)}</span>
                   </div>
                 )
               })}
               {despesaCategories.length === 0 && (
-                <p className="text-[#475569] text-xs">Nenhuma categoria de despesa cadastrada</p>
+                <p className="text-gray-400 text-xs">Nenhuma categoria de despesa cadastrada</p>
               )}
             </div>
           </div>
