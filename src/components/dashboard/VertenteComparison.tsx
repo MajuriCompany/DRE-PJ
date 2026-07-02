@@ -61,7 +61,7 @@ export function VertenteComparison({ rows }: VertenteComparisonProps) {
   return (
     <Card className="bg-white border border-gray-100 shadow-sm">
       <CardContent className="p-5">
-        <h2 className="text-sm font-semibold text-gray-800 mb-4">Comparativo: Serviço vs Infoproduto</h2>
+        <h2 className="text-sm font-semibold text-gray-800 mb-4 text-center">Comparativo: Serviço vs Infoproduto</h2>
         <div className="flex gap-4">
           <ComparisonColumn row={servico} color="text-blue-600" />
           <div className="w-px bg-gray-100" />

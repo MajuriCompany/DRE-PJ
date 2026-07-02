@@ -21,16 +21,27 @@ function CustomTooltip({ active, payload }: { active?: boolean; payload?: Array<
   )
 }
 
-function CustomLegend({ payload }: { payload?: Array<{ value: string; color: string }> }) {
+function CustomLegend({ payload }: { payload?: Array<{ value: string; color: string; payload: ChartDataItem }> }) {
   if (!payload?.length) return null
+  const total = payload.reduce((s, e) => s + (e.payload?.value || 0), 0)
   return (
-    <ul className="flex flex-wrap gap-x-4 gap-y-1.5 justify-center mt-3">
-      {payload.map((entry, i) => (
-        <li key={i} className="flex items-center gap-1.5 text-xs text-gray-500">
-          <span className="h-2 w-2 rounded-full shrink-0" style={{ backgroundColor: entry.color }} />
-          <span className="truncate max-w-[120px]">{entry.value}</span>
-        </li>
-      ))}
+    <ul className="space-y-2 mt-4 px-1">
+      {payload.map((entry, i) => {
+        const val = entry.payload?.value || 0
+        const pct = total > 0 ? ((val / total) * 100).toFixed(1) : '0.0'
+        return (
+          <li key={i} className="flex items-center justify-between gap-2 text-xs">
+            <div className="flex items-center gap-1.5 min-w-0">
+              <span className="h-2.5 w-2.5 rounded-full shrink-0" style={{ backgroundColor: entry.color }} />
+              <span className="truncate text-gray-600 max-w-[120px]">{entry.value}</span>
+            </div>
+            <div className="flex items-center gap-3 shrink-0">
+              <span className="font-mono text-gray-700">{formatCurrency(val)}</span>
+              <span className="text-gray-400 w-10 text-right font-medium">{pct}%</span>
+            </div>
+          </li>
+        )
+      })}
     </ul>
   )
 }
@@ -45,12 +56,12 @@ export function PieChartBase({ data, height = 260, showLegend = true, innerRadiu
   }
 
   return (
-    <ResponsiveContainer width="100%" height={height}>
+    <ResponsiveContainer width="100%" height={showLegend ? height + data.length * 28 : height}>
       <PieChart>
         <Pie
           data={data}
           cx="50%"
-          cy="50%"
+          cy={height / 2}
           innerRadius={innerRadius}
           outerRadius={innerRadius + 55}
           paddingAngle={2}

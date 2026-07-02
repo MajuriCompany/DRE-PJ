@@ -8,9 +8,11 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { EditTransactionDialog } from './EditTransactionDialog'
 import { formatCurrency, formatDate } from '@/lib/utils'
 import type { Transaction, Category, Vertente, TransactionFormData } from '@/types'
-import { Plus, Search, Pencil, Trash2, ChevronLeft, ChevronRight } from 'lucide-react'
+import { Plus, Search, Pencil, Trash2, ChevronLeft, ChevronRight, ChevronUp, ChevronDown } from 'lucide-react'
 
 const PAGE_SIZE = 15
+
+type SortField = 'date' | 'value_bruto' | 'value_liquido' | 'value_total'
 
 interface TransactionsTableProps {
   transactions: Transaction[]
@@ -21,19 +23,49 @@ interface TransactionsTableProps {
   onDelete: (id: string) => Promise<{ error?: string }>
 }
 
+function SortIcon({ field, sortField, sortDir }: { field: SortField; sortField: SortField | null; sortDir: 'asc' | 'desc' }) {
+  if (sortField !== field) return <ChevronUp className="h-3 w-3 text-gray-300 ml-0.5" />
+  return sortDir === 'asc'
+    ? <ChevronUp className="h-3 w-3 text-blue-500 ml-0.5" />
+    : <ChevronDown className="h-3 w-3 text-blue-500 ml-0.5" />
+}
+
 export function TransactionsTable({
   transactions, categories, taxRates, onAdd, onUpdate, onDelete
 }: TransactionsTableProps) {
   const [search, setSearch] = useState('')
   const [filterCategory, setFilterCategory] = useState('all')
   const [filterType, setFilterType] = useState('all')
+  const [sortField, setSortField] = useState<SortField | null>(null)
+  const [sortDir, setSortDir] = useState<'asc' | 'desc'>('desc')
   const [page, setPage] = useState(1)
   const [dialogOpen, setDialogOpen] = useState(false)
   const [editing, setEditing] = useState<Transaction | null>(null)
   const [deletingId, setDeletingId] = useState<string | null>(null)
 
+  const visibleCategories = useMemo(() => {
+    if (filterType === 'all') return categories
+    return categories.filter((c) => c.type === filterType)
+  }, [categories, filterType])
+
+  function handleTypeChange(v: string) {
+    setFilterType(v)
+    setFilterCategory('all')
+    setPage(1)
+  }
+
+  function handleSort(field: SortField) {
+    if (sortField === field) {
+      setSortDir((d) => (d === 'asc' ? 'desc' : 'asc'))
+    } else {
+      setSortField(field)
+      setSortDir('desc')
+    }
+    setPage(1)
+  }
+
   const filtered = useMemo(() => {
-    return transactions.filter((t) => {
+    let list = transactions.filter((t) => {
       const matchSearch =
         !search ||
         t.description?.toLowerCase().includes(search.toLowerCase()) ||
@@ -42,7 +74,20 @@ export function TransactionsTable({
       const matchType = filterType === 'all' || t.type === filterType
       return matchSearch && matchCat && matchType
     })
-  }, [transactions, search, filterCategory, filterType])
+
+    if (sortField) {
+      list = [...list].sort((a, b) => {
+        const aVal = a[sortField] ?? ''
+        const bVal = b[sortField] ?? ''
+        if (typeof aVal === 'string') {
+          return sortDir === 'asc' ? aVal.localeCompare(bVal as string) : (bVal as string).localeCompare(aVal)
+        }
+        return sortDir === 'asc' ? (aVal as number) - (bVal as number) : (bVal as number) - (aVal as number)
+      })
+    }
+
+    return list
+  }, [transactions, search, filterCategory, filterType, sortField, sortDir])
 
   const totalPages = Math.ceil(filtered.length / PAGE_SIZE)
   const paginated = filtered.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE)
@@ -61,6 +106,18 @@ export function TransactionsTable({
     if (id) return onUpdate(id, data)
     return onAdd(data)
   }
+
+  const SortableHeader = ({ field, label }: { field: SortField; label: string }) => (
+    <th
+      className="px-4 py-2.5 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider whitespace-nowrap cursor-pointer select-none hover:text-gray-700"
+      onClick={() => handleSort(field)}
+    >
+      <span className="inline-flex items-center gap-0.5">
+        {label}
+        <SortIcon field={field} sortField={sortField} sortDir={sortDir} />
+      </span>
+    </th>
+  )
 
   return (
     <>
@@ -84,7 +141,7 @@ export function TransactionsTable({
                 className="pl-8 bg-white border-gray-200 text-gray-700 placeholder:text-gray-400"
               />
             </div>
-            <Select value={filterType} onValueChange={(v) => { setFilterType(v); setPage(1) }}>
+            <Select value={filterType} onValueChange={handleTypeChange}>
               <SelectTrigger className="w-full sm:w-[130px] bg-white border-gray-200 text-gray-700">
                 <SelectValue placeholder="Tipo" />
               </SelectTrigger>
@@ -100,7 +157,7 @@ export function TransactionsTable({
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">Todas as categorias</SelectItem>
-                {categories.map((c) => (
+                {visibleCategories.map((c) => (
                   <SelectItem key={c.id} value={c.id}>{c.name}</SelectItem>
                 ))}
               </SelectContent>
@@ -113,14 +170,15 @@ export function TransactionsTable({
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b border-gray-100 bg-gray-50">
-                  {['Data', 'Descrição', 'Categoria', 'Tipo', 'Vertente', 'Fat. Bruto', 'Líquido', 'Total', ''].map((h) => (
-                    <th
-                      key={h}
-                      className="px-4 py-2.5 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider whitespace-nowrap"
-                    >
-                      {h}
-                    </th>
-                  ))}
+                  <SortableHeader field="date" label="Data" />
+                  <th className="px-4 py-2.5 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider whitespace-nowrap">Descrição</th>
+                  <th className="px-4 py-2.5 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider whitespace-nowrap">Categoria</th>
+                  <th className="px-4 py-2.5 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider whitespace-nowrap">Tipo</th>
+                  <th className="px-4 py-2.5 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider whitespace-nowrap">Vertente</th>
+                  <SortableHeader field="value_bruto" label="Fat. Bruto" />
+                  <SortableHeader field="value_liquido" label="Líquido" />
+                  <SortableHeader field="value_total" label="Total" />
+                  <th className="px-4 py-2.5" />
                 </tr>
               </thead>
               <tbody>
