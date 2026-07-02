@@ -14,6 +14,7 @@ import { VertenteComparison } from '@/components/dashboard/VertenteComparison'
 import { VertenteConfigManager } from '@/components/dashboard/VertenteConfigManager'
 import { TransactionsTable } from '@/components/dashboard/TransactionsTable'
 import { LoginPage } from '@/components/dashboard/LoginPage'
+import { PartnerDashboard } from '@/components/dashboard/PartnerDashboard'
 import {
   filterByMonth,
   filterUpToMonth,
@@ -55,6 +56,7 @@ export default function DashboardPage() {
   const [subTab, setSubTab] = useState<SubTab>('overview')
   const [editingPL, setEditingPL] = useState(false)
   const [plDraft, setPlDraft] = useState(0)
+  const [activeProfile, setActiveProfile] = useState('eu')
 
   const userId = user?.id ?? null
   const monthParsed = parseMonthValue(selectedMonth)
@@ -144,9 +146,21 @@ export default function DashboardPage() {
         onMonthChange={setSelectedMonth}
         onDownload={() => exportTransactionsToCSV(transactions)}
         onSignOut={signOut}
+        activeProfile={activeProfile}
+        onProfileChange={setActiveProfile}
       />
 
       <main className="flex-1 px-6 sm:px-8 lg:px-12 py-5 space-y-4 max-w-[1200px] w-full mx-auto">
+
+      {activeProfile === 'rafa' && (
+        <PartnerDashboard
+          userId={userId!}
+          selectedMonth={selectedMonth}
+          taxRates={taxRates}
+        />
+      )}
+
+      {activeProfile === 'eu' && <>
 
         {/* KPI Cards — reagem ao activeTab */}
         <KPICards data={kpi} activeTab={activeTab} saldoCaixa={saldoCaixa} />
@@ -284,6 +298,7 @@ export default function DashboardPage() {
             onSaveMonthlyData={upsertMonthlyData}
           />
         )}
+      </>}
       </main>
 
       <footer className="border-t border-gray-200 py-3 bg-white">

@@ -19,6 +19,7 @@ interface EditTransactionDialogProps {
   categories: Category[]
   taxRates: Record<Vertente, number>
   onSave: (data: TransactionFormData, id?: string) => Promise<{ error?: string }>
+  fixedVertente?: Vertente
 }
 
 const VERTENTES: Vertente[] = ['GERAL', 'SERVICO', 'INFOPRODUTO']
@@ -31,7 +32,7 @@ const VERTENTE_LABELS: Record<Vertente, string> = {
 }
 
 export function EditTransactionDialog({
-  open, onOpenChange, transaction, categories, taxRates, onSave
+  open, onOpenChange, transaction, categories, taxRates, onSave, fixedVertente
 }: EditTransactionDialogProps) {
   const isEditing = !!transaction
   const [saving, setSaving] = useState(false)
@@ -80,7 +81,7 @@ export function EditTransactionDialog({
         description: '',
         category_id: '',
         type: 'RECEITA',
-        vertente: 'GERAL',
+        vertente: fixedVertente || 'GERAL',
         value_bruto: 0,
         tax_rate: 0,
         tax_value: 0,
@@ -89,7 +90,7 @@ export function EditTransactionDialog({
         notes: '',
       })
     }
-  }, [transaction, reset, open])
+  }, [transaction, reset, open, fixedVertente])
 
   useEffect(() => {
     const rate = taxRates[watchVertente as Vertente] ?? 0
@@ -156,6 +157,7 @@ export function EditTransactionDialog({
               </Select>
             </div>
 
+            {!fixedVertente && (
             <div className="space-y-1.5">
               <Label>Vertente *</Label>
               <Select
@@ -172,6 +174,7 @@ export function EditTransactionDialog({
                 </SelectContent>
               </Select>
             </div>
+          )}
           </div>
 
           <div className="grid grid-cols-2 gap-3">

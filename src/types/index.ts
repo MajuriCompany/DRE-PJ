@@ -4,6 +4,7 @@ export type TransactionType = 'RECEITA' | 'DESPESA'
 export interface Transaction {
   id: string
   user_id: string
+  perfil: string
   date: string
   description: string
   category_id: string
@@ -23,6 +24,7 @@ export interface Transaction {
 export interface Category {
   id: string
   user_id: string
+  perfil: string
   name: string
   type: TransactionType
   created_at: string
@@ -40,6 +42,7 @@ export interface VertenteConfig {
 export interface MonthlyData {
   id: string
   user_id: string
+  perfil: string
   year: number
   month: number
   pro_labore: number

@@ -21,6 +21,7 @@ interface TransactionsTableProps {
   onAdd: (data: TransactionFormData) => Promise<{ error?: string }>
   onUpdate: (id: string, data: Partial<TransactionFormData>) => Promise<{ error?: string }>
   onDelete: (id: string) => Promise<{ error?: string }>
+  fixedVertente?: Vertente
 }
 
 function SortIcon({ field, sortField, sortDir }: { field: SortField; sortField: SortField | null; sortDir: 'asc' | 'desc' }) {
@@ -31,7 +32,7 @@ function SortIcon({ field, sortField, sortDir }: { field: SortField; sortField: 
 }
 
 export function TransactionsTable({
-  transactions, categories, taxRates, onAdd, onUpdate, onDelete
+  transactions, categories, taxRates, onAdd, onUpdate, onDelete, fixedVertente
 }: TransactionsTableProps) {
   const [search, setSearch] = useState('')
   const [filterCategory, setFilterCategory] = useState('all')
@@ -177,7 +178,7 @@ export function TransactionsTable({
                   <th className="px-4 py-2.5 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider whitespace-nowrap">Descrição</th>
                   <th className="px-4 py-2.5 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider whitespace-nowrap">Categoria</th>
                   <th className="px-4 py-2.5 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider whitespace-nowrap">Tipo</th>
-                  <th className="px-4 py-2.5 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider whitespace-nowrap">Vertente</th>
+                  {!fixedVertente && <th className="px-4 py-2.5 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider whitespace-nowrap">Vertente</th>}
                   <SortableHeader field="value_bruto" label="Fat. Bruto" />
                   <SortableHeader field="value_liquido" label="Líquido" />
                   <SortableHeader field="value_total" label="Total" />
@@ -187,7 +188,7 @@ export function TransactionsTable({
               <tbody>
                 {paginated.length === 0 ? (
                   <tr>
-                    <td colSpan={9} className="px-4 py-12 text-center text-gray-400 text-sm">
+                    <td colSpan={fixedVertente ? 8 : 9} className="px-4 py-12 text-center text-gray-400 text-sm">
                       Nenhuma transação encontrada
                     </td>
                   </tr>
@@ -212,11 +213,13 @@ export function TransactionsTable({
                           {t.type === 'RECEITA' ? '↑ Receita' : '↓ Despesa'}
                         </Badge>
                       </td>
-                      <td className="px-4 py-3 whitespace-nowrap">
-                        <Badge variant={t.vertente === 'INFOPRODUTO' ? 'infoproduto' : 'outline'}>
-                          {t.vertente}
-                        </Badge>
-                      </td>
+                      {!fixedVertente && (
+                        <td className="px-4 py-3 whitespace-nowrap">
+                          <Badge variant={t.vertente === 'INFOPRODUTO' ? 'infoproduto' : 'outline'}>
+                            {t.vertente}
+                          </Badge>
+                        </td>
+                      )}
                       <td className="px-4 py-3 text-xs font-mono text-gray-700 whitespace-nowrap">
                         {formatCurrency(t.value_bruto)}
                       </td>
@@ -279,6 +282,7 @@ export function TransactionsTable({
         categories={categories}
         taxRates={taxRates}
         onSave={handleSave}
+        fixedVertente={fixedVertente}
       />
     </>
   )

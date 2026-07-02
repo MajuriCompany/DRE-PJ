@@ -3,7 +3,7 @@ import { useState, useEffect, useCallback } from 'react'
 import { supabase } from '@/lib/supabase'
 import type { MonthlyData } from '@/types'
 
-export function useMonthlyData(userId: string | null, year?: number, month?: number) {
+export function useMonthlyData(userId: string | null, year?: number, month?: number, perfil = 'eu') {
   const [monthlyData, setMonthlyData] = useState<MonthlyData | null>(null)
   const [loading, setLoading] = useState(true)
 
@@ -19,10 +19,11 @@ export function useMonthlyData(userId: string | null, year?: number, month?: num
       .eq('user_id', userId)
       .eq('year', year)
       .eq('month', month)
+      .eq('perfil', perfil)
       .maybeSingle()
     setMonthlyData(data as MonthlyData | null)
     setLoading(false)
-  }, [userId, year, month])
+  }, [userId, year, month, perfil])
 
   useEffect(() => {
     fetchMonthlyData()
@@ -40,11 +41,11 @@ export function useMonthlyData(userId: string | null, year?: number, month?: num
       } else {
         await supabase
           .from('monthly_data')
-          .insert({ user_id: userId, year, month, pro_labore: proLabore, saldo_inicial: saldoInicial })
+          .insert({ user_id: userId, year, month, pro_labore: proLabore, saldo_inicial: saldoInicial, perfil })
       }
       fetchMonthlyData()
     },
-    [userId, year, month, monthlyData, fetchMonthlyData]
+    [userId, year, month, monthlyData, fetchMonthlyData, perfil]
   )
 
   return {

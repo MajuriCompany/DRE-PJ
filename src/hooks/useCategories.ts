@@ -3,7 +3,7 @@ import { useState, useEffect, useCallback } from 'react'
 import { supabase } from '@/lib/supabase'
 import type { Category, TransactionType } from '@/types'
 
-export function useCategories(userId: string | null) {
+export function useCategories(userId: string | null, perfil = 'eu') {
   const [categories, setCategories] = useState<Category[]>([])
   const [loading, setLoading] = useState(true)
 
@@ -13,10 +13,11 @@ export function useCategories(userId: string | null) {
       .from('categories')
       .select('*')
       .eq('user_id', userId)
+      .eq('perfil', perfil)
       .order('name')
     setCategories(data as Category[] || [])
     setLoading(false)
-  }, [userId])
+  }, [userId, perfil])
 
   useEffect(() => {
     fetchCategories()
@@ -27,11 +28,11 @@ export function useCategories(userId: string | null) {
       if (!userId) return { error: 'Não autenticado' }
       const { error } = await supabase
         .from('categories')
-        .insert({ name, type, user_id: userId })
+        .insert({ name, type, user_id: userId, perfil })
       if (!error) fetchCategories()
       return { error: error?.message }
     },
-    [userId, fetchCategories]
+    [userId, fetchCategories, perfil]
   )
 
   const deleteCategory = useCallback(

@@ -3,7 +3,7 @@ import { useState, useEffect, useCallback } from 'react'
 import { supabase } from '@/lib/supabase'
 import type { MonthlyData } from '@/types'
 
-export function useAllMonthlyData(userId: string | null) {
+export function useAllMonthlyData(userId: string | null, perfil = 'eu') {
   const [allMonthlyData, setAllMonthlyData] = useState<MonthlyData[]>([])
 
   const fetch = useCallback(async () => {
@@ -12,8 +12,9 @@ export function useAllMonthlyData(userId: string | null) {
       .from('monthly_data')
       .select('*')
       .eq('user_id', userId)
+      .eq('perfil', perfil)
     setAllMonthlyData((data as MonthlyData[]) ?? [])
-  }, [userId])
+  }, [userId, perfil])
 
   useEffect(() => { fetch() }, [fetch])
 

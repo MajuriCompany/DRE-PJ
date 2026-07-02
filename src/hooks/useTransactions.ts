@@ -3,7 +3,7 @@ import { useState, useEffect, useCallback } from 'react'
 import { supabase } from '@/lib/supabase'
 import type { Transaction, TransactionFormData } from '@/types'
 
-export function useTransactions(userId: string | null) {
+export function useTransactions(userId: string | null, perfil = 'eu') {
   const [transactions, setTransactions] = useState<Transaction[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -15,6 +15,7 @@ export function useTransactions(userId: string | null) {
       .from('transactions')
       .select('*, categories(id, name, type)')
       .eq('user_id', userId)
+      .eq('perfil', perfil)
       .order('date', { ascending: false })
 
     if (error) {
@@ -23,7 +24,7 @@ export function useTransactions(userId: string | null) {
       setTransactions(data as Transaction[])
     }
     setLoading(false)
-  }, [userId])
+  }, [userId, perfil])
 
   useEffect(() => {
     fetchTransactions()
@@ -34,11 +35,11 @@ export function useTransactions(userId: string | null) {
       if (!userId) return { error: 'Usuário não autenticado' }
       const { error } = await supabase
         .from('transactions')
-        .insert({ ...data, user_id: userId })
+        .insert({ ...data, user_id: userId, perfil })
       if (!error) fetchTransactions()
       return { error: error?.message }
     },
-    [userId, fetchTransactions]
+    [userId, fetchTransactions, perfil]
   )
 
   const updateTransaction = useCallback(

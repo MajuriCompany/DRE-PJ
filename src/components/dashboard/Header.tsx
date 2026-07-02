@@ -8,9 +8,11 @@ interface HeaderProps {
   onMonthChange: (value: string) => void
   onDownload: () => void
   onSignOut: () => void
+  activeProfile: string
+  onProfileChange: (p: string) => void
 }
 
-export function Header({ selectedMonth, onMonthChange, onDownload, onSignOut }: HeaderProps) {
+export function Header({ selectedMonth, onMonthChange, onDownload, onSignOut, activeProfile, onProfileChange }: HeaderProps) {
   return (
     <header className="sticky top-0 z-40 border-b border-gray-200 bg-white/95 backdrop-blur-sm shadow-sm">
       <div className="flex h-14 items-center justify-between px-8 gap-4 max-w-[1200px] mx-auto w-full">
@@ -21,6 +23,28 @@ export function Header({ selectedMonth, onMonthChange, onDownload, onSignOut }: 
           <h1 className="text-base font-bold text-gray-800 tracking-tight hidden sm:block">
             Dashboard Financeiro
           </h1>
+          <div className="flex gap-0.5 bg-gray-100 rounded-lg p-0.5 ml-1">
+            <button
+              onClick={() => onProfileChange('eu')}
+              className={`px-3 py-1 rounded-md text-xs font-medium transition-colors ${
+                activeProfile === 'eu'
+                  ? 'bg-white shadow-sm text-blue-600'
+                  : 'text-gray-500 hover:text-gray-700'
+              }`}
+            >
+              Meu DRE
+            </button>
+            <button
+              onClick={() => onProfileChange('rafa')}
+              className={`px-3 py-1 rounded-md text-xs font-medium transition-colors ${
+                activeProfile === 'rafa'
+                  ? 'bg-white shadow-sm text-purple-600'
+                  : 'text-gray-500 hover:text-gray-700'
+              }`}
+            >
+              Rafa
+            </button>
+          </div>
         </div>
 
         <MonthSelector value={selectedMonth} onChange={onMonthChange} />
