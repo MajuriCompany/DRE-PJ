@@ -59,15 +59,17 @@ export function VertenteComparison({ rows }: VertenteComparisonProps) {
   if (!servico || !info) return null
 
   return (
-    <Card className="bg-white border border-gray-100 shadow-sm">
-      <CardContent className="p-5">
-        <h2 className="text-sm font-semibold text-gray-800 mb-4 text-center">Comparativo: Serviço vs Infoproduto</h2>
-        <div className="flex gap-4">
-          <ComparisonColumn row={servico} color="text-blue-600" />
-          <div className="w-px bg-gray-100" />
-          <ComparisonColumn row={info} color="text-purple-600" />
-        </div>
-      </CardContent>
-    </Card>
+    <div className="flex justify-center">
+      <Card className="bg-white border border-gray-100 shadow-sm w-full max-w-2xl">
+        <CardContent className="p-5">
+          <h2 className="text-sm font-semibold text-gray-800 mb-4 text-center">Comparativo: Serviço vs Infoproduto</h2>
+          <div className="flex gap-4">
+            <ComparisonColumn row={servico} color="text-blue-600" />
+            <div className="w-px bg-gray-100" />
+            <ComparisonColumn row={info} color="text-purple-600" />
+          </div>
+        </CardContent>
+      </Card>
+    </div>
   )
 }
