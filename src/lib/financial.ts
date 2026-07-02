@@ -8,8 +8,8 @@ export function filterByMonth(
   if (monthValue === 'all') return transactions
   const [year, month] = monthValue.split('-').map(Number)
   return transactions.filter((t) => {
-    const d = new Date(t.date)
-    return d.getFullYear() === year && d.getMonth() + 1 === month
+    const [tYear, tMonth] = t.date.split('-').map(Number)
+    return tYear === year && tMonth === month
   })
 }
 
