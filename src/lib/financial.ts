@@ -13,6 +13,27 @@ export function filterByMonth(
   })
 }
 
+export function filterUpToMonth(
+  transactions: Transaction[],
+  monthValue: string
+): Transaction[] {
+  if (monthValue === 'all') return transactions
+  const [year, month] = monthValue.split('-').map(Number)
+  return transactions.filter((t) => {
+    const [tYear, tMonth] = t.date.split('-').map(Number)
+    return tYear < year || (tYear === year && tMonth <= month)
+  })
+}
+
+export function calcSaldoCaixa(transactions: Transaction[]): number {
+  const receitas = transactions.filter((t) => t.type === 'RECEITA')
+  const despesas = transactions.filter((t) => t.type === 'DESPESA')
+  return (
+    receitas.reduce((s, t) => s + (t.value_liquido || 0), 0) -
+    despesas.reduce((s, t) => s + (t.value_total || 0), 0)
+  )
+}
+
 export function filterByVertente(
   transactions: Transaction[],
   vertente: Vertente | 'GERAL'

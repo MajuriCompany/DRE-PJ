@@ -6,6 +6,7 @@ import { DollarSign, TrendingUp, Receipt, TrendingDown, PiggyBank, Wallet } from
 interface KPICardsProps {
   data: KPIData
   activeTab: string
+  saldoCaixa: number
 }
 
 interface KPICardProps {
@@ -36,13 +37,12 @@ function KPICard({ title, value, icon, iconBg, valueColor = 'text-gray-900' }: K
   )
 }
 
-export function KPICards({ data, activeTab }: KPICardsProps) {
+export function KPICards({ data, activeTab, saldoCaixa }: KPICardsProps) {
   const isGeral = activeTab === 'GERAL'
   const isInfo = activeTab === 'INFOPRODUTO'
 
   const lucroLiquido = data.faturamentoLiquido - data.despesasTotal
   const lucroPosProLabore = lucroLiquido - data.proLabore
-  const saldoCaixa = data.saldoInicial + lucroPosProLabore
 
   const fatBrutoLabel = isInfo ? 'Faturamento Bruto (Plataforma)' : 'Faturamento Bruto'
   const fatLiqLabel = isInfo ? 'Comissão Recebida' : 'Faturamento Líquido'

@@ -15,6 +15,8 @@ import { TransactionsTable } from '@/components/dashboard/TransactionsTable'
 import { LoginPage } from '@/components/dashboard/LoginPage'
 import {
   filterByMonth,
+  filterUpToMonth,
+  calcSaldoCaixa,
   calcKPI,
   calcMargins,
   calcLucroDistribution,
@@ -82,6 +84,11 @@ export default function DashboardPage() {
   const kpi = useMemo(() => calcKPI(filteredByTab, proLabore, saldoInicial, activeTab), [filteredByTab, proLabore, saldoInicial, activeTab])
   const margins = useMemo(() => calcMargins(kpi), [kpi])
 
+  const saldoCaixa = useMemo(() => {
+    const upToMonth = filterUpToMonth(transactions, selectedMonth)
+    return calcSaldoCaixa(upToMonth)
+  }, [transactions, selectedMonth])
+
   const lucroData = useMemo(() => calcLucroDistribution(filteredByMonth), [filteredByMonth])
   const receitasTituloData = useMemo(() => calcReceitasPorTitulo(filteredByTab), [filteredByTab])
   const receitasCatData = useMemo(() => calcReceitasPorCategoria(filteredByTab, categories), [filteredByTab, categories])
@@ -133,7 +140,7 @@ export default function DashboardPage() {
       <main className="flex-1 px-6 sm:px-8 lg:px-12 py-5 space-y-4 max-w-[1200px] w-full mx-auto">
 
         {/* KPI Cards — reagem ao activeTab */}
-        <KPICards data={kpi} activeTab={activeTab} />
+        <KPICards data={kpi} activeTab={activeTab} saldoCaixa={saldoCaixa} />
 
         {/* Margens */}
         <MarginCards margins={margins} kpi={kpi} />
