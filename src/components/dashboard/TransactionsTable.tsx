@@ -45,8 +45,11 @@ export function TransactionsTable({
 
   const visibleCategories = useMemo(() => {
     if (filterType === 'all') return categories
-    return categories.filter((c) => c.type === filterType)
-  }, [categories, filterType])
+    const usedIds = new Set(
+      transactions.filter((t) => t.type === filterType).map((t) => t.category_id)
+    )
+    return categories.filter((c) => usedIds.has(c.id))
+  }, [categories, transactions, filterType])
 
   function handleTypeChange(v: string) {
     setFilterType(v)
