@@ -25,12 +25,13 @@ export function filterUpToMonth(
   })
 }
 
-export function calcSaldoCaixa(transactions: Transaction[]): number {
+export function calcSaldoCaixa(transactions: Transaction[], proLaboreTotal = 0): number {
   const receitas = transactions.filter((t) => t.type === 'RECEITA')
   const despesas = transactions.filter((t) => t.type === 'DESPESA')
   return (
     receitas.reduce((s, t) => s + (t.value_liquido || 0), 0) -
-    despesas.reduce((s, t) => s + (t.value_total || 0), 0)
+    despesas.reduce((s, t) => s + (t.value_total || 0), 0) -
+    proLaboreTotal
   )
 }
 

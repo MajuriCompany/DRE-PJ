@@ -5,6 +5,7 @@ import { useTransactions } from '@/hooks/useTransactions'
 import { useCategories } from '@/hooks/useCategories'
 import { useVertenteConfig } from '@/hooks/useVertenteConfig'
 import { useMonthlyData } from '@/hooks/useMonthlyData'
+import { useAllMonthlyData } from '@/hooks/useAllMonthlyData'
 import { Header } from '@/components/dashboard/Header'
 import { KPICards } from '@/components/dashboard/KPICards'
 import { MarginCards } from '@/components/dashboard/MarginCards'
@@ -62,6 +63,7 @@ export default function DashboardPage() {
     useTransactions(userId)
   const { categories, addCategory, deleteCategory } = useCategories(userId)
   const { configs, getTaxRate, upsertConfig } = useVertenteConfig(userId)
+  const { allMonthlyData } = useAllMonthlyData(userId)
   const { proLabore, saldoInicial, upsertMonthlyData } = useMonthlyData(
     userId,
     monthParsed?.year,
@@ -86,8 +88,15 @@ export default function DashboardPage() {
 
   const saldoCaixa = useMemo(() => {
     const upToMonth = filterUpToMonth(transactions, selectedMonth)
-    return calcSaldoCaixa(upToMonth)
-  }, [transactions, selectedMonth])
+    const proLaboreAcumulado = (() => {
+      if (selectedMonth === 'all') return allMonthlyData.reduce((s, d) => s + (d.pro_labore || 0), 0)
+      const [year, month] = selectedMonth.split('-').map(Number)
+      return allMonthlyData
+        .filter((d) => d.year < year || (d.year === year && d.month <= month))
+        .reduce((s, d) => s + (d.pro_labore || 0), 0)
+    })()
+    return calcSaldoCaixa(upToMonth, proLaboreAcumulado)
+  }, [transactions, selectedMonth, allMonthlyData])
 
   const lucroData = useMemo(() => calcLucroDistribution(filteredByMonth), [filteredByMonth])
   const receitasTituloData = useMemo(() => calcReceitasPorTitulo(filteredByTab), [filteredByTab])
