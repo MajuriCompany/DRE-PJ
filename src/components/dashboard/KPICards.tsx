@@ -42,7 +42,7 @@ export function KPICards({ data, activeTab }: KPICardsProps) {
 
   const lucroLiquido = data.faturamentoLiquido - data.despesasTotal
   const lucroPosProLabore = lucroLiquido - data.proLabore
-  const saldoCaixa = data.saldoInicial
+  const saldoCaixa = data.saldoInicial + lucroPosProLabore
 
   const fatBrutoLabel = isInfo ? 'Faturamento Bruto (Plataforma)' : 'Faturamento Bruto'
   const fatLiqLabel = isInfo ? 'Comissão Recebida' : 'Faturamento Líquido'
